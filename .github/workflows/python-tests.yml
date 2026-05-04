@@ -2,6 +2,9 @@ name: Selenium Tests
 
 on: [push, pull_request]
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -27,9 +30,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Verificar instalación
+      run: |
+        google-chrome --version
+        python --version
+        pip show selenium
+        chromedriver --version || echo "ChromeDriver no encontrado en PATH"
+
     - name: Ejecutar pruebas en modo Headless
       run: |
-        pytest test_practico.py --html=reporte_final.html --self-contained-html
+        pytest test_practico.py -v --html=reporte_final.html --self-contained-html
 
     - name: Guardar el Reporte HTML como evidencia
       if: always()
