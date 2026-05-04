@@ -27,7 +27,7 @@ jobs:
       run: |
         # Importante: En servidores CI no hay pantalla física,
         # las pruebas deben correr en modo 'headless'
-        pytest test_tienda.py --html=reporte_final.html --self-contained-html
+        pytest test_practico.py --html=reporte_final.html --self-contained-html
 
     - name: Guardar el Reporte HTML como evidencia
       if: always() # Se ejecuta aunque fallen las pruebas
