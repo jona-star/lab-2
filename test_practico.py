@@ -22,7 +22,7 @@ def driver():
 def test_login_exitoso(driver):
     """CASO 1: Login Exitoso"""
     print("Ejecutando Caso 1: Login...")
-    driver.get("https://saucedemo.com")
+    driver.get("https://www.saucedemo.com")
     driver.find_element(By.ID, "user-name").send_keys("standard_user")
     driver.find_element(By.ID, "password").send_keys("secret_sauce")
     driver.find_element(By.ID, "login-button").click()
@@ -33,7 +33,7 @@ def test_agregar_al_carrito(driver):
     """CASO 2: Agregar al Carrito"""
     print("Ejecutando Caso 2: Agregar producto...")
     if "inventory.html" not in driver.current_url:
-        driver.get("https://saucedemo.com")
+        driver.get("https://www.saucedemo.com")
         driver.find_element(By.ID, "user-name").send_keys("standard_user")
         driver.find_element(By.ID, "password").send_keys("secret_sauce")
         driver.find_element(By.ID, "login-button").click()
@@ -47,14 +47,24 @@ def test_agregar_al_carrito(driver):
 def test_login_fallido(driver):
     """CASO 3: Login Fallido (Usuario Bloqueado)"""
     print("Ejecutando Caso 3: Login fallido...")
+
+    # Ir al sitio primero, luego limpiar sesión y recargar
+    driver.get("https://www.saucedemo.com")
     driver.delete_all_cookies()
-    driver.get("https://saucedemo.com")
-    driver.find_element(By.ID, "user-name").send_keys("locked_out_user")
-    driver.find_element(By.ID, "password").send_keys("secret_sauce")
-    driver.find_element(By.ID, "login-button").click()
-    
-    # Espera explícita para que el mensaje de error aparezca
+    driver.refresh()
+
     wait = WebDriverWait(driver, 15)
+
+    username = wait.until(EC.visibility_of_element_located((By.ID, "user-name")))
+    username.clear()
+    username.send_keys("locked_out_user")
+
+    password = wait.until(EC.visibility_of_element_located((By.ID, "password")))
+    password.clear()
+    password.send_keys("secret_sauce")
+
+    wait.until(EC.element_to_be_clickable((By.ID, "login-button"))).click()
+
     error_msg = wait.until(
         EC.visibility_of_element_located((By.CSS_SELECTOR, "[data-test='error']"))
     )
