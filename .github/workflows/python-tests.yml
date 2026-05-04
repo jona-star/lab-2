@@ -5,8 +5,6 @@ on: [push, pull_request] # Se activa al subir código o crear un PR
 jobs:
   test:
     runs-on: ubuntu-latest # Usamos Linux en la nube
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
     - name: Descargar código del repositorio
@@ -15,7 +13,7 @@ jobs:
     - name: Configurar Python
       uses: actions/setup-python@v5
       with:
-        python-version: '3.9'
+        python-version: '3.12'
 
     - name: Instalar dependencias
       run: |
